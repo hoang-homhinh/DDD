@@ -1,0 +1,15 @@
+global:
+  scrape_interval: 15s
+
+scrape_configs:  # Sai tên key, phải là `scrape_configs` (không phải `scrape_config_files`)
+  - job_name: 'banvetau-prometheus'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:9090']
+    metrics_path: '/metrics'  # Sai thụt dòng, phải nằm ngoài `static_configs`
+
+  - job_name: 'banvetau-springboot'
+    scrape_interval: 5s
+    static_configs:
+      - targets: ['localhost:1122']
+    metrics_path: '/actuator/prometheus'  # Sai thụt dòng, phải nằm ngoài `static_configs`
