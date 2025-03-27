@@ -8,6 +8,12 @@ services:
   mysql:
     image: mysql:8.0
     container_name: pre-event-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root1234
+      MYSQL_DATABASE: ticket
+      MYSQL_PASSWORD: root1234
+    ports:
+      - "3316:3306"
     volumes:
       - ./data/db_data:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d/ # nếu bạn không phải devops vui lòng contact anonystick. tks
@@ -40,5 +46,69 @@ services:
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
     restart: unless-stopped
+    networks:
+      - pre-event-network
+
+  #grafana
+  grafana:
+    image: grafana/grafana
+    container_name: pre-event-grafana
+    hostname: grafana
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_SERVER_DOMAIN=localhost
+    #enable logger
+      - GF_LOG_MODE=console file
+      - GF_LOG_FITERS=alerting.notifier.slack:debug alermanager:debug ngalert:debug
+
+    volumes:
+      - ./grafana-storage:/var/lib/grafana
+    ports:
+      - "3000:3000"
+    networks:
+      - pre-event-network
+
+  node-exporter:
+    image: prom/node-exporter:latest
+    container_name: pre-event-node-exporter
+    restart: unless-stopped
+    volumes:
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.ignored-mount-points=^/(sys|proc|dev|host|etc)($$|/)'
+    ports:
+      - "9100:9100"
+    networks:
+      - pre-event-network
+
+  #Mysql exporter
+  mysql-exporter:
+    image: prom/mysqld-exporter
+    container_name: pre-event-mysqld-exporter
+    ports:
+      - "9104:9104"
+    command:
+      - '--collect.engine.innodbstatus'
+      - '--collect.info_shema.processlist'
+      - '--collect.info_shema.tables'
+      - '--collect.info_shema.query_response_time'
+      - '--collect.info_shema.file_events'
+      - '--collect.info_shema.eventsstatements'
+      - '--collect.info_indexiowaits'
+      - '--collect.global_status'
+#      - '--ignore-tables'
+      - '--config.my-cnf=/etc/mysql-exporter/.my.cnf'
+    volumes:
+      - ./mysql-exporter/.my.cnf:/etc/mysql-exporter/my.cnf
+    environment:
+      - DATA_SOURCE_NAME=root:root1234@tcp(mysql:3316)/
+    depends_on:
+      - mysql
     networks:
       - pre-event-network

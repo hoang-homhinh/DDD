@@ -5,11 +5,22 @@ scrape_configs:  # Sai tên key, phải là `scrape_configs` (không phải `scr
   - job_name: 'banvetau-prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:9090']
+      - targets: ['host.docker.internal:9090']
     metrics_path: '/metrics'  # Sai thụt dòng, phải nằm ngoài `static_configs`
 
   - job_name: 'banvetau-springboot'
     scrape_interval: 5s
     static_configs:
-      - targets: ['localhost:1122']
+      - targets: ['host.docker.internal:1122']
     metrics_path: '/actuator/prometheus'  # Sai thụt dòng, phải nằm ngoài `static_configs`
+
+  - job_name: 'banvetau-node-exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'host.docker.internal:9100' ]
+
+  - job_name: 'banvetau-mysql-exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'host.docker.internal:9104' ]
+    metrics_path: '/metrics'
