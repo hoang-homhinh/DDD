@@ -24,3 +24,9 @@ scrape_configs:  # Sai tên key, phải là `scrape_configs` (không phải `scr
     static_configs:
       - targets: [ 'host.docker.internal:9104' ]
     metrics_path: '/metrics'
+
+  - job_name: 'banvetau-redis-exporter'
+    scrape_interval: 5s
+    static_configs:
+      - targets: [ 'host.docker.internal:9121' ]
+    metrics_path: '/metrics'
