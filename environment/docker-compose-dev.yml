@@ -88,24 +88,24 @@ services:
       - pre-event-network
 
   #Mysql exporter
-  mysql-exporter:
+  mysqld-exporter:
     image: prom/mysqld-exporter
     container_name: pre-event-mysqld-exporter
     ports:
       - "9104:9104"
     command:
-      - '--collect.engine.innodbstatus'
-      - '--collect.info_shema.processlist'
-      - '--collect.info_shema.tables'
-      - '--collect.info_shema.query_response_time'
-      - '--collect.info_shema.file_events'
-      - '--collect.info_shema.eventsstatements'
-      - '--collect.info_indexiowaits'
+      - '--collect.engine_innodb_status'
+      - '--collect.info_schema.processlist'
+      - '--collect.info_schema.tables'
+      - '--collect.info_schema.query_response_time'
+      - '--collect.perf_schema.file_events'
+      - '--collect.perf_schema.eventsstatements'
+      - '--collect.perf_schema.indexiowaits'
       - '--collect.global_status'
-#      - '--ignore-tables'
-      - '--config.my-cnf=/etc/mysql-exporter/.my.cnf'
+      #      - '--ignore-tables'
+      - '--config.my-cnf=/etc/mysql/.my.cnf'
     volumes:
-      - ./mysql-exporter/.my.cnf:/etc/mysql-exporter/my.cnf
+      - ./mysqld-exporter/.my.cnf:/etc/mysql/.my.cnf
     environment:
       - DATA_SOURCE_NAME=root:root1234@tcp(mysql:3316)/
     depends_on:
@@ -125,3 +125,50 @@ services:
       - redis
     networks:
       - pre-event-network
+
+  #elasticsearch
+  elasticsearch:
+    image: elasticsearch:7.17.25
+    container_name: pre-event-elasticsearch
+    volumes:
+      - ./elk/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+    environment:
+      ES_JAVA_OPTS: "-Xms512m -Xmx512m"
+      discovery.type: single-node
+    networks:
+      - pre-event-network
+
+  #logstash
+  logstash:
+    image: logstash:7.17.25
+    container_name: pre-event-logstash
+    volumes:
+      - ./elk/logstash.yml:/usr/share/logstash/config/logstash.yml
+      - ./elk/piplines:/usr/share/logstash/pipeline
+    ports:
+      - "5044:5044"
+      - "5033:5033/tcp"
+      - "5022:5000/udp"
+      - "9600:9600"
+    environment:
+      LS_JAVA_OPTS: "-Xms512m -Xmx512m"
+    networks:
+      - pre-event-network
+    depends_on:
+      - elasticsearch
+
+  #kibana
+  kiabana:
+    image: kibana:7.17.25
+    container_name: pre-event-kiabana
+    volumes:
+      - ./elk/kibana.yml:/usr/share/kibana/config/kibana.yml
+    ports:
+      - "5601:5601"
+    networks:
+      - pre-event-network
+    depends_on:
+      - elasticsearch

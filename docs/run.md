@@ -13,4 +13,8 @@ Chú ý: Khi run thành công thi sẽ tự tạo một folder `data/db_data` tr
 3. quản lý và monitor bằng Prometheus và Grafana
     + Prometheus: dùng để lấy dữ liệu(datasourc) từ các service: mysql, redis, project(springboot) 
     + Grafana: dùng để hiển thị dữ liệu từ Prometheus
-
+4. tiêu chí chọn local cache:
+    + maximun size: 1000 : là số lượng dữ liệu tối đa được cache
+    + maximunWeight: 100Mb : la dung lượng tối đa của cache
+    + ttl: 10m : thời gian dữ liệu được cache
+    + expireAfterAccess: 10m : thời gian dữ liệu được cache

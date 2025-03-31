@@ -10,7 +10,8 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.Map;
 import java.util.Optional;
 
@@ -18,6 +19,7 @@ import java.util.Optional;
 @Slf4j
 public class RedisInfrasServiceImpl  implements RedisInfrasService {
 
+    private static final Logger log = LoggerFactory.getLogger(RedisInfrasServiceImpl.class);
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Override
