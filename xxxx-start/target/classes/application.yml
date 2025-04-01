@@ -4,14 +4,14 @@ server:
     threads:
       max: 200 #
       min-spare: 50
-    #    max-connections: 8000
+#    max-connections: 8000
     accept-count: 20000
 
 
 spring:
   # application
   application:
-    name: zzz.com
+    name: xxxx.com
   #DBS
   datasource:
     hikari:
@@ -45,7 +45,7 @@ spring:
           max-active: 10 # Maximum number of active connections in the pool (uses -1 for no limit)
           max-idle: 5 # Maximum number of idle connections in the pool
           min-idle: 5 # Minimum number of idle connections in the pool
-      #          max-wait: -1ms # Maximum wait time to get a connection from the pool (uses -1 for no limit)
+#          max-wait: -1ms # Maximum wait time to get a connection from the pool (uses -1 for no limit)
       connect-timeout: 30000 # Connection timeout (in milliseconds)
   threads:
     virtual:
@@ -54,14 +54,14 @@ resilience4j:
   circuitbreaker:
     instances:
       checkRandom:
-        registerHealthIndicator: true
-        slidingWindowSize: 10
-        permittedNumberOfCallsInHalfOpenState: 3
-        #        slidingWindowType: TIME_BASED
-        minimumNumberOfCalls: 5
-        waitDurationInOpenState: 5s
-        failureRateThreshold: 50
-        eventConsumerBufferSize: 10
+              registerHealthIndicator: true
+              slidingWindowSize: 10
+              permittedNumberOfCallsInHalfOpenState: 3
+      #        slidingWindowType: TIME_BASED
+              minimumNumberOfCalls: 5
+              waitDurationInOpenState: 5s
+              failureRateThreshold: 50
+              eventConsumerBufferSize: 10
 
   ratelimiter:
     instances:

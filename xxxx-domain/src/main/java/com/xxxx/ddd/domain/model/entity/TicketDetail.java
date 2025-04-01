@@ -34,4 +34,9 @@ public class TicketDetail {
     private Long activityId;
     private Date updatedAt;
     private Date createdAt;
+
+//    @Override
+//    public String toString() {
+//        return "TicketDetail{id=" + id + ", name='" + name + "', otherField=1}";
+//    }
 }

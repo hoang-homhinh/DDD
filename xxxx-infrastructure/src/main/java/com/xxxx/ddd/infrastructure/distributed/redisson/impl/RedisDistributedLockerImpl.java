@@ -6,8 +6,6 @@ import jakarta.annotation.Resource;
 import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RLock;
 import org.redisson.api.RedissonClient;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.concurrent.TimeUnit;
@@ -16,7 +14,6 @@ import java.util.concurrent.TimeUnit;
 @Slf4j
 public class RedisDistributedLockerImpl implements RedisDistributedService {
 
-    private static final Logger log = LoggerFactory.getLogger(RedisDistributedLockerImpl.class);
     @Resource
     private RedissonClient redissonClient;
     @Override
@@ -28,7 +25,7 @@ public class RedisDistributedLockerImpl implements RedisDistributedService {
             @Override
             public boolean tryLock(long waitTime, long leaseTime, TimeUnit unit) throws InterruptedException {
                 boolean isLockSuccess = rLock.tryLock(waitTime, leaseTime, unit);
-                log.info("{} get lock result:{}", lockKey, isLockSuccess);
+//                log.info("{} get lock result:{}", lockKey, isLockSuccess);
                 return isLockSuccess;
             }
 

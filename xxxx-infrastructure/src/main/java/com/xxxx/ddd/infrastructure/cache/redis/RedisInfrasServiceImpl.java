@@ -10,8 +10,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -19,7 +18,6 @@ import java.util.Optional;
 @Slf4j
 public class RedisInfrasServiceImpl  implements RedisInfrasService {
 
-    private static final Logger log = LoggerFactory.getLogger(RedisInfrasServiceImpl.class);
     @Resource
     private RedisTemplate<String, Object> redisTemplate;
     @Override
@@ -53,7 +51,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
         try {
             redisTemplate.opsForValue().set(key, value);
         }catch (Exception e){
-            log.error("setObject error:{}",e.getMessage());
+//            log.error("setObject error:{}",e.getMessage());
         }
 //        redisTemplate.opsForValue().set(key, value);
 //        // Kiểm tra xem giá trị có được lưu thành công hay không
@@ -64,7 +62,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
     @Override
     public <T> T getObject(String key, Class<T> targetClass) {
         Object result = redisTemplate.opsForValue().get(key);
-        log.info("get Cache::{}", result);
+//        log.info("get Cache::{}", result);
         if (result == null) {
             return null;
         }
@@ -82,7 +80,7 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.convertValue(result, targetClass);
             } catch (IllegalArgumentException e) {
-                log.error("Error converting LinkedHashMap to object: {}", e.getMessage());
+//                log.error("Error converting LinkedHashMap to object: {}", e.getMessage());
                 return null;
             }
         }
@@ -93,11 +91,16 @@ public class RedisInfrasServiceImpl  implements RedisInfrasService {
                 ObjectMapper objectMapper = new ObjectMapper();
                 return objectMapper.readValue((String) result, targetClass);
             } catch (JsonProcessingException e) {
-                log.error("Error deserializing JSON to object: {}", e.getMessage());
+//                log.error("Error deserializing JSON to object: {}", e.getMessage());
                 return null;
             }
         }
 
         return null; // hoặc ném ra một ngoại lệ tùy ý
+    }
+
+    @Override
+    public void delete(String key) {
+        redisTemplate.delete(key);
     }
 }

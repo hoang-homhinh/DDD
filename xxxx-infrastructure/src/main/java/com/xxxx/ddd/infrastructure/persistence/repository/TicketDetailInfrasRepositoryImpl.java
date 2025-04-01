@@ -20,7 +20,7 @@ public class TicketDetailInfrasRepositoryImpl implements TicketDetailRepository 
 
     @Override
     public Optional<TicketDetail> findById(Long id) {
-        log.info("Implement Infrastructure : {}", id);
+//        log.info("Implement Infrastructure : {}", id);
         return ticketDetailJPAMapper.findById(id);
     }
 }

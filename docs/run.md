@@ -18,3 +18,8 @@ Chú ý: Khi run thành công thi sẽ tự tạo một folder `data/db_data` tr
     + maximunWeight: 100Mb : la dung lượng tối đa của cache
     + ttl: 10m : thời gian dữ liệu được cache
     + expireAfterAccess: 10m : thời gian dữ liệu được cache
+5. cách đồng bộ dữ liệu của local cache và redis cache:
+6. kafka: có 3 cách để gủi producer:
+    + bất đồng bộ: không đợi kết quả trả về
+    + đồng bộ: đợi kết quả trả về
+    + callback: keet hợp 2 cách trên: gửi đi và làm việc khác, khi có kết quả sẽ nhận được thông báo

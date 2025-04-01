@@ -28,7 +28,7 @@ services:
   #Redis
   redis:
     container_name: pre-event-redis
-    image: redis:latest
+    image: redislabs/redismod:latest
     ports:
       - "6319:6379"
     networks:
@@ -105,7 +105,7 @@ services:
       - '--collect.perf_schema.eventsstatements'
       - '--collect.perf_schema.indexiowaits'
       - '--collect.global_status'
-#      - '--ignore-tables'
+      #      - '--ignore-tables'
       - '--config.my-cnf=/etc/mysql/.my.cnf'
     volumes:
       - ./mysqld-exporter/.my.cnf:/etc/mysql/.my.cnf
@@ -167,17 +167,3 @@ services:
       - pre-event-network
     depends_on:
       - elasticsearch
-
-#  logstash-exporter:
-#    image: alxrem/prometheus-logstash-exporter
-#    container_name: pre-event-logstash-exporter
-#    command: ["-logstash.host", "logstash"]
-#    platform: linux/arm64/v8
-#    environment:
-#      LOGSTASH_URI: "http://logstash:9600" # Kết nối tới Logstash API
-#    ports:
-#      - "9304:9304" # Cổng Logstash Exporter cho Prometheus
-#    networks:
-#      - pre-event-network
-#    depends_on:
-#      - logstash
